@@ -1,0 +1,37 @@
+.{
+    .name = .libdatachannel,
+    .version = "0.24.5",
+    .fingerprint = 0x6a2facd3132ffcd0,
+    .minimum_zig_version = "0.17.0-dev.1417+20befa4e6",
+    .dependencies = .{
+        // Upstream libdatachannel at v0.24.5. Its bundled deps are git
+        // submodules upstream; Zig does not recurse submodules, so each is
+        // pinned here at the exact submodule commit recorded by v0.24.5.
+        .libdatachannel = .{
+            .url = "git+https://github.com/paullouisageneau/libdatachannel.git?ref=v0.24.5#443f6934d9007eb7076ab7825ba330f355fcbead",
+            .hash = "N-V-__8AAJzPNwPph04ad5XuRiyZEqPbcUXjt730v2IcjbGM",
+        },
+        .libjuice = .{
+            .url = "git+https://github.com/paullouisageneau/libjuice.git#3c40a3545b6b1b62c7adee7f8f2bd58aa290afd6",
+            .hash = "N-V-__8AAF5mCAAXQ3WxkJzYXGFMVlVBJ0TgrTfLPHxILy4w",
+        },
+        .usrsctp = .{
+            .url = "git+https://github.com/paullouisageneau/usrsctp.git#fec583d54493f879d2ae44a743423bf8a04371ab",
+            .hash = "N-V-__8AALAGWACeA2U3iSwHwHdWNrq6RB1I8N80fRDQYjrw",
+        },
+        .plog = .{
+            .url = "git+https://github.com/SergiusTheBest/plog.git#94899e0b926ac1b0f4750bfbd495167b4a6ae9ef",
+            .hash = "N-V-__8AAHtdDQDis4xbVP81BKAWxzs139lkmIgHT9HpIdfP",
+        },
+        .mbedtls = .{
+            .url = "git+https://github.com/ZigguratGames/mbedtls?ref=main#782753579c3fffc3cc14287ca0fe53c11d0c7a0b",
+            .hash = "mbedtls-3.6.7-E4NUR3oYAABRJd7pkxzz31T4xLPhlZJq4Meu50yOXgq7",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "LICENSE",
+        "README.md",
+    },
+}
