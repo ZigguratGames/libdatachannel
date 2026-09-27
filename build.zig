@@ -17,6 +17,9 @@ pub fn build(b: *Build) void {
     const mbedtls = mbedtls_dep.artifact("mbedtls");
 
     const windows = target.result.os.tag == .windows;
+    // BSD-family sockaddrs (incl. usrsctp's sockaddr_conn) carry a length
+    // byte; upstream CMake probes these with check_struct_has_member.
+    const bsd_sockaddr = target.result.os.tag.isBSD();
 
     // libjuice (ICE), mirroring upstream CMake: static, USE_NETTLE=0.
     const juice = b.addLibrary(.{
@@ -68,6 +71,14 @@ pub fn build(b: *Build) void {
     usrsctp.root_module.addCMacro("min(a,b)", "(((a) > (b)) ? (b) : (a))");
     usrsctp.root_module.addCMacro("max(a,b)", "(((a) > (b)) ? (a) : (b))");
     usrsctp.root_module.addIncludePath(usrsctp_dep.path("usrsctplib"));
+    if (bsd_sockaddr) {
+        usrsctp.root_module.addCMacro("HAVE_SA_LEN", "");
+        usrsctp.root_module.addCMacro("HAVE_SIN_LEN", "");
+        usrsctp.root_module.addCMacro("HAVE_SIN6_LEN", "");
+        usrsctp.root_module.addCMacro("HAVE_SCONN_LEN", "");
+    }
+    if (target.result.os.tag.isDarwin()) usrsctp.root_module.addCMacro("__APPLE_USE_RFC_2292", "");
+    if (target.result.os.tag == .linux) usrsctp.root_module.addCMacro("_GNU_SOURCE", "");
     if (windows) {
         usrsctp.root_module.addCMacro("WIN32_LEAN_AND_MEAN", "");
         usrsctp.root_module.linkSystemLibrary("ws2_32", .{});
@@ -102,6 +113,7 @@ pub fn build(b: *Build) void {
     mod.addCMacro("USE_NICE", "0");
     mod.addCMacro("JUICE_STATIC", "");
     mod.addCMacro("SCTP_STDINT_INCLUDE", "<stdint.h>");
+    if (bsd_sockaddr) mod.addCMacro("HAVE_SCONN_LEN", "");
     // Must match the mbedtls dep's -Ddtls-srtp so ssl.h exposes the
     // mbedtls_ssl_srtp_profile declarations used by dtlstransport.cpp.
     mod.addCMacro("MBEDTLS_SSL_DTLS_SRTP", "");
