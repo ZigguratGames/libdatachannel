@@ -113,6 +113,7 @@ pub fn build(b: *Build) void {
     mod.addCMacro("USE_NICE", "0");
     mod.addCMacro("JUICE_STATIC", "");
     mod.addCMacro("SCTP_STDINT_INCLUDE", "<stdint.h>");
+    mod.addCMacro("SCTP_DEBUG", "");
     if (bsd_sockaddr) mod.addCMacro("HAVE_SCONN_LEN", "");
     // Must match the mbedtls dep's -Ddtls-srtp so ssl.h exposes the
     // mbedtls_ssl_srtp_profile declarations used by dtlstransport.cpp.
